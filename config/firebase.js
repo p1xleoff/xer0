@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, initializeAuth, getReactNativePersistence } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getFirestore } from 'firebase/firestore';
+// import { getFirestore } from 'firebase/firestore';
 // import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -22,10 +22,24 @@ const firebaseConfig = {
 export const checkAuthState = (onUserAuthenticated, onUserLoggedOut) => {
   const auth = getAuth();
   
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       // User is authenticated
       onUserAuthenticated(user);
+
+      // Fetch additional user information from the database
+      const db = getDatabase();
+      const userRef = ref(db, `users/${user.uid}`);
+      const userSnapshot = await get(userRef);
+
+      if (userSnapshot.exists()) {
+        const userData = userSnapshot.val();
+        console.log("User Data:", userData);
+
+        // Now you can use the user data to display information on the home screen
+      } else {
+        console.error("User data not found in the database.");
+      }
     } else {
       // User is logged out
       onUserLoggedOut();
@@ -37,7 +51,7 @@ const app = initializeApp(firebaseConfig);
 initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage)
 });
-const firestore = getFirestore(app);
+// const firestore = getFirestore(app);
 const auth = getAuth(app);
-export { auth, app, firestore };
+export { auth, app };
 // const analytics = getAnalytics(app);

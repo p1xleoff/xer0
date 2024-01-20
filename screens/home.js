@@ -5,13 +5,16 @@ import { Divider, Icon } from "react-native-paper";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getAuth, signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
+import { getDatabase, ref, get } from "firebase/database";
 
 const Home = () => {
   const route = useRoute();
+  const [userData, setUserData] = useState(null);
   const [userEmail, setUserEmail] = useState('');
   const navigation = useNavigation();
 
   const auth = getAuth();
+
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -26,6 +29,26 @@ const Home = () => {
     const currentUser = auth.currentUser;
     if (currentUser) {
       setUserEmail(currentUser.email);
+
+      // Fetch additional user information from the Realtime Database
+      const db = getDatabase();
+      const userRef = ref(db, `users/${currentUser.uid}`);
+      
+      get(userRef)
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            const userData = snapshot.val();
+           // console.log("User Data:", userData);
+
+            // Set user data to state
+            setUserData(userData);
+          } else {
+            console.error("User data not found in the database.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
     }
   }, []);
 
@@ -37,31 +60,30 @@ const Home = () => {
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <View>
-          <Text style={{ fontSize: 22 }}>hello there, <Text style={styles.header}>{userEmail}</Text></Text>
-          <Text style={styles.text}>Lets get some stuff done today!</Text>
+          <Text style={{ fontSize: 22 }}>hello there, <Text style={styles.header}>{userData ? userData.username : userEmail}</Text></Text>
         </View>
         <Divider style={{margin: 10}}/>
         <View>
-          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Register")}>
-              <Text style={[styles.text, {color: '#fff'}]}>Set War Preference</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Login")}>
-              <Text style={[styles.text, {color: '#fff'}]}>Check out routines</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.links} onPress={handleSignOut}>
-              <Text style={[styles.text, {color: '#fff'}]}>Clear Data</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>          
           <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Profile")}>
-              <Text style={[styles.text, {color: '#fff'}]}>huh</Text>
+              <Text style={[styles.text, {color: '#fff'}]}>Profile</Text>
               <Icon source="chevron-right" color='#fff' size={28} />
           </TouchableOpacity>          
           <TouchableOpacity style={styles.links} onPress={navigateToStatus}>
-              <Text style={[styles.text, {color: '#fff'}]}>Status</Text>
+              <Text style={[styles.text, {color: '#fff'}]}>War</Text>
               <Icon source="chevron-right" color='#fff' size={28} />
           </TouchableOpacity>
+          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Register")}>
+              <Text style={[styles.text, {color: '#fff'}]}>Register</Text>
+              <Icon source="chevron-right" color='#fff' size={28} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Login")}>
+              <Text style={[styles.text, {color: '#fff'}]}>login</Text>
+              <Icon source="chevron-right" color='#fff' size={28} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.links} onPress={handleSignOut}>
+              <Text style={[styles.text, {color: '#fff'}]}>logout</Text>
+              <Icon source="chevron-right" color='#fff' size={28} />
+          </TouchableOpacity>          
         </View>
       </View>
     </View>
