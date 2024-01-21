@@ -15,15 +15,6 @@ const Home = () => {
 
   const auth = getAuth();
 
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        navigation.replace("Login");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
   useEffect(() => {
     // Fetch the current user's email when the component mounts
     const currentUser = auth.currentUser;
@@ -52,10 +43,6 @@ const Home = () => {
     }
   }, []);
 
-  const navigateToStatus = () => {
-    navigation.navigate('Status', { userEmail: userEmail });
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
@@ -68,22 +55,14 @@ const Home = () => {
               <Text style={[styles.text, {color: '#fff'}]}>Profile</Text>
               <Icon source="chevron-right" color='#fff' size={28} />
           </TouchableOpacity>          
-          <TouchableOpacity style={styles.links} onPress={navigateToStatus}>
+          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Status")}>
               <Text style={[styles.text, {color: '#fff'}]}>War</Text>
               <Icon source="chevron-right" color='#fff' size={28} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Register")}>
-              <Text style={[styles.text, {color: '#fff'}]}>Register</Text>
+          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Account")}>
+              <Text style={[styles.text, {color: '#fff'}]}>account</Text>
               <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Login")}>
-              <Text style={[styles.text, {color: '#fff'}]}>login</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.links} onPress={handleSignOut}>
-              <Text style={[styles.text, {color: '#fff'}]}>logout</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>           
+          </TouchableOpacity>          
           <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Tester")}>
               <Text style={[styles.text, {color: '#fff'}]}>Tester</Text>
               <Icon source="chevron-right" color='#fff' size={28} />

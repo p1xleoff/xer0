@@ -76,6 +76,7 @@ function Register() {
       <TextInput
         style={styles.input}
         mode="outlined"
+        activeOutlineColor='#000'
         label="Email"
         keyboardType='email-address'
         onChangeText={text => setEmail(text)}
@@ -85,6 +86,7 @@ function Register() {
         mode="outlined"
         label="Password"       
         value={password}
+        activeOutlineColor='#000'
         onChangeText={text => setPassword(text)}
         secureTextEntry={!passwordVisible}
         right={
@@ -96,6 +98,7 @@ function Register() {
       <TextInput
         style={styles.input}
         mode="outlined"
+        activeOutlineColor='#000'
         label="Username"
         onChangeText={(text) => setUsername(text)}
       />
@@ -138,7 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     marginVertical: '10%',
     alignItems: 'center',
-    backgroundColor: 'orangered',
+    backgroundColor: '#000',
     paddingVertical: '3%',
     elevation: 5,
 },  
@@ -154,7 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 66,
     fontWeight: 'bold',
     letterSpacing: 1,
-    color: 'orangered',
+    color: '#000',
 },
   textWrap: {
   alignItems: 'center',
@@ -163,10 +166,6 @@ const styles = StyleSheet.create({
   color: '#000',
   fontSize: 20,
 },
-  inputOutline: {
-    borderRadius: 9, 
-    borderColor: 'orangered'
-  },
 });
 
 export default Register; 

@@ -63,12 +63,11 @@ const Profile = () => {
     }
 
     // Village ID regex validation
-    const villageIdRegex = /^#[A-Z0-9]{1,10}$/;
-    if (!villageIdRegex.test(clashId)) {
-      Alert.alert(
-        'Validation Error',
-        'Invalid Player ID'
-      );
+    const startsWithHash = clashId.startsWith('#');
+    const villageIdRegex = /^[A-Z0-9]{1,10}$/;
+  
+    if (!startsWithHash || !villageIdRegex.test(clashId.slice(1))) {
+      Alert.alert('Validation Error', 'Invalid Player ID');
       return false;
     }
     const townHallRegex = /^(0?[1-9]|1[0-9]|16)$/;
@@ -84,7 +83,6 @@ const Profile = () => {
 
     return true;
   };
-
 
   const deleteProfile = (profileKey) => {
     Alert.alert(
@@ -227,11 +225,11 @@ const Profile = () => {
         translucent
         backgroundColor="transparent"
       />
-      <View style={{ marginHorizontal: 20, flex: 1, }}>
+      <View style={{ marginHorizontal: 20, flex: 1 }}>
         {userData ? (
           <View>
             <View style={styles.header}>
-              <Icon source="audio-input-xlr" color="#fff" size={50} />
+              <Icon source="sword-cross" color="#fff" size={50} />
               <View>
                 <Text
                   style={{
@@ -255,7 +253,7 @@ const Profile = () => {
                 </Text> */}
               </View>
             </View>
-            <Text style={{ fontSize: 16, fontWeight: '500', marginTop: 20 }}>
+            <Text style={{ fontSize: 16, fontWeight: '500', marginTop: 20, color: '#fff' }}>
               Game Accounts:
             </Text>
             <FlatList
@@ -269,7 +267,7 @@ const Profile = () => {
               }
               renderItem={renderItem}
               keyExtractor={(item) => item.key}
-              style={{marginBottom: 220}}
+              style={{ marginBottom: 220 }}
               showsVerticalScrollIndicator={false}
             />
           </View>
@@ -379,23 +377,25 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#101010',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: '#171717',
+    backgroundColor: '#1a1a1a',
     paddingVertical: 15,
     borderRadius: 5,
     paddingHorizontal: 15,
+    elevation: 7
   },
   profileItem: {
-    marginTop: 5,
-    backgroundColor: '#1a1a1a',
+    marginTop: 10,
+    backgroundColor: '#1e1e1e',
     borderColor: '#ccc',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 9,
+    elevation: 7
   },
   itemText: {
     fontSize: 14,
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
   },
   loadingOverlay: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
 });
 

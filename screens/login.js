@@ -35,7 +35,6 @@ function Login() {
         const user = userCredential.user;
         // Save the user's login info to local storage
         console.log('Logged in with: ', user.email);
-        Alert.alert('Welcome back!');
         // Navigate to Home screen and pass user information
         toHome({ email: user.email });
       })
@@ -53,6 +52,7 @@ function Login() {
       <TextInput
         style={styles.input}
         mode="outlined"
+        activeOutlineColor='#000'
         label="Email"
         keyboardType='email-address'
         value={email}
@@ -62,6 +62,7 @@ function Login() {
         style={styles.input}
         mode="outlined"
         label="Password"
+        activeOutlineColor='#000'
         value={password}
         onChangeText={text => setPassword(text)}
         secureTextEntry={!passwordVisible}
@@ -100,13 +101,15 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: '#fff',
     marginBottom: 10,
+    fontWeight: 'bold',
+    fontSize: 18
   },
   button: {
     width: '100%',
     borderRadius: 9,
     marginVertical: '10%',
     alignItems: 'center',
-    backgroundColor: 'orangered',
+    backgroundColor: '#000',
     paddingVertical: '3%',
     elevation: 10,
   },  
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
     fontSize: 66,
     fontWeight: 'bold',
     letterSpacing: 1,
-    color: 'orangered',
+    color: '#000',
   },
   textWrap: {
     alignItems: 'center',
@@ -131,10 +134,6 @@ const styles = StyleSheet.create({
     color:  '#000',
     fontSize: 20,
   },
-  inputOutline: {
-    borderRadius: 9, 
-    borderColor: 'orangered'
-  }
 });
 
 export default Login;
