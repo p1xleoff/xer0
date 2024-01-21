@@ -8,6 +8,7 @@ import Register from '../screens/register.js'
 import Login from '../screens/login.js';
 import Profile from '../screens/profile.js';
 import Status from '../screens/status.js';
+import Tester from '../screens/tester.js'
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export const Navigator = () => {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="Tester" component={Tester} />
       <Stack.Screen name="Status" component={Status} />
     </Stack.Navigator>
     </PaperProvider>

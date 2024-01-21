@@ -83,6 +83,10 @@ const Home = () => {
           <TouchableOpacity style={styles.links} onPress={handleSignOut}>
               <Text style={[styles.text, {color: '#fff'}]}>logout</Text>
               <Icon source="chevron-right" color='#fff' size={28} />
+          </TouchableOpacity>           
+          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Tester")}>
+              <Text style={[styles.text, {color: '#fff'}]}>Tester</Text>
+              <Icon source="chevron-right" color='#fff' size={28} />
           </TouchableOpacity>          
         </View>
       </View>
