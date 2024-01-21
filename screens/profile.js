@@ -243,7 +243,7 @@ const Profile = () => {
                 >
                   {userData.username}
                 </Text>
-                <Text
+                {/* <Text
                   style={{
                     fontSize: 16,
                     fontWeight: '500',
@@ -252,7 +252,7 @@ const Profile = () => {
                   }}
                 >
                   {userData.email}
-                </Text>
+                </Text> */}
               </View>
             </View>
             <Text style={{ fontSize: 16, fontWeight: '500', marginTop: 20 }}>
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
     backgroundColor: '#171717',
     paddingVertical: 15,
     borderRadius: 5,
