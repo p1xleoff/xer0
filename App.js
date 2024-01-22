@@ -10,12 +10,12 @@ export default function App() {
 
   return (
     <NavigationContainer>
-            <StatusBar
-        barStyle='dark-content'
+      <StatusBar
+        barStyle="light-content"
         translucent
         backgroundColor="transparent"
       />
-        <Navigator />
+      <Navigator />
     </NavigationContainer>
   );
 }

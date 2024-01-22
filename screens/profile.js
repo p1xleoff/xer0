@@ -220,11 +220,6 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle={isBottomSheetOpen ? 'dark-content' : 'dark-content'}
-        translucent
-        backgroundColor="transparent"
-      />
       <View style={{ marginHorizontal: 20, flex: 1 }}>
         {userData ? (
           <View>
@@ -427,12 +422,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     elevation: 10,
     alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     width: '100%',
     alignSelf: 'center',
   },
   buttonText: {
-    color: '#fff',
+    color: '#000',
     fontWeight: 'bold',
     letterSpacing: 1.5,
   },
