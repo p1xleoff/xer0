@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, StatusBar, Text, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
+import { View, StyleSheet, StatusBar, Text, TouchableOpacity, FlatList } from 'react-native';
 import { auth, database, ref, push, onValue, off } from '../config/firebase';
 import { remove } from '@firebase/database';
 import * as Notifications from 'expo-notifications';
 
 function TroopRequestPage() {
   const [troopRequests, setTroopRequests] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
 
   const sendTroopRequest = async () => {
     try {
@@ -46,15 +45,6 @@ function TroopRequestPage() {
     }
   };
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-
-    // Fetch updated troop requests
-    // ...
-
-    setRefreshing(false);
-  }, []);
-
   useEffect(() => {
     const handleNewTroopRequest = (snapshot) => {
       const troopRequestsData = snapshot.val();
@@ -78,7 +68,7 @@ function TroopRequestPage() {
     return () => {
       off(troopRequestsRef, 'value', handleNewTroopRequest);
     };
-  }, [onRefresh]);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -99,9 +89,6 @@ function TroopRequestPage() {
             )}
           </View>
         )}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
       />
     </View>
   );
