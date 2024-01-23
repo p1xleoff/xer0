@@ -33,7 +33,7 @@ export const Navigator = () => {
         <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="Account" component={Account} options={{ headerShown: false }} />
-        <Stack.Screen name="Tester" component={Tester} options={{ headerShown: false }} />
+        <Stack.Screen name="Tester" component={Tester} />
         <Stack.Screen name="Status" component={Status} options={{ title: 'Player War Status' }} />
       </Stack.Navigator>
     </PaperProvider>

@@ -47,7 +47,7 @@ const Home = () => {
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <View>
-          <Text style={{ fontSize: 22 }}>hello there, <Text style={styles.header}>{userData ? userData.username : userEmail}</Text></Text>
+          <Text style={{ fontSize: 22, color: '#fff' }}>hello there, <Text style={styles.header}>{userData ? userData.username : userEmail}</Text></Text>
         </View>
         <Divider style={{margin: 10}}/>
         <View>
@@ -67,6 +67,10 @@ const Home = () => {
               <Text style={[styles.text, {color: '#fff'}]}>Tester</Text>
               <Icon source="chevron-right" color='#fff' size={28} />
           </TouchableOpacity>          
+           <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Login")}>
+              <Text style={[styles.text, {color: '#fff'}]}>Login</Text>
+              <Icon source="chevron-right" color='#fff' size={28} />
+          </TouchableOpacity>          
         </View>
       </View>
     </View>
@@ -76,7 +80,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#101010',
     paddingTop: StatusBar.currentHeight+30
   },
   innerContainer: {
@@ -100,12 +104,13 @@ const styles = StyleSheet.create({
   },
   links:  {
     flexDirection: 'row',
-    backgroundColor: '#000',
+    backgroundColor: '#1a1a1a',
     elevation: 10,
     padding: 15,
     borderRadius: 7,
     justifyContent: 'space-between',
     marginVertical: 10,
+    elevation: 5,
   },
 });
 export default Home;
