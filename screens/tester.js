@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, StatusBar, Text, TouchableOpacity, FlatList } from 'react-native';
 import { auth, database, ref, push, onValue, off } from '../config/firebase';
 import { remove } from '@firebase/database';
+import { sendPushNotification } from '../config/pushNotifs';
+import { registerForPushNotificationsAsync } from '../config/expoNotifs';
 import * as Notifications from 'expo-notifications';
 
 function TroopRequestPage() {
@@ -10,7 +12,7 @@ function TroopRequestPage() {
   const sendTroopRequest = async () => {
     try {
       const userId = auth.currentUser.uid;
-
+  
       // Push troop request to the database with a timestamp
       await push(ref(database, 'troopRequests'), {
         userId,
@@ -18,25 +20,22 @@ function TroopRequestPage() {
         timestamp: Date.now(),
         completed: false,
       });
+  
+      const expoPushToken = await registerForPushNotificationsAsync();
+  
+      if (expoPushToken) {
+        // Send a push notification with the Expo Push Token
+        sendPushNotification(expoPushToken, 'Troop Request', 'I need reinforcements!');
+      }
     } catch (error) {
       console.error('Error sending troop request:', error);
     }
   };
 
-  const handleTroopRequestNotification = (troopRequest) => {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Troop Request',
-        body: `${troopRequest.userId} needs reinforcements: ${troopRequest.message}`,
-      },
-      trigger: null, // Send immediately
-    });
-  };
-
   const markAsCompleted = async (troopRequestId) => {
     try {
       // Remove the troop request from the database
-      await remove(ref(database, 'troopRequests/' + troopRequestId));
+      await remove(ref(database, `troopRequests/${troopRequestId}`));
 
       // Update the local state to reflect the removal of the completed troop request
       setTroopRequests((prevTroopRequests) => prevTroopRequests.filter((item) => item.id !== troopRequestId));
@@ -46,6 +45,14 @@ function TroopRequestPage() {
   };
 
   useEffect(() => {
+    console.log("Setting up notification listeners");
+    const notificationListener = Notifications.addNotificationReceivedListener((notification) => {
+      console.log('Notification received:', notification);
+      // Handle the notification if needed
+    });
+
+    // Listen for changes in the 'troopRequests' node
+    const troopRequestsRef = ref(database, 'troopRequests');
     const handleNewTroopRequest = (snapshot) => {
       const troopRequestsData = snapshot.val();
 
@@ -60,13 +67,12 @@ function TroopRequestPage() {
       }
     };
 
-    // Listen for changes in the 'troopRequests' node
-    const troopRequestsRef = ref(database, 'troopRequests');
     onValue(troopRequestsRef, handleNewTroopRequest);
 
-    // Clean up the listener when the component unmounts
+    // Clean up the listeners when the component unmounts
     return () => {
       off(troopRequestsRef, 'value', handleNewTroopRequest);
+      Notifications.removeNotificationSubscription(notificationListener);
     };
   }, []);
 

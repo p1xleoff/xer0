@@ -6,7 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { getAuth, signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { getDatabase, ref, get } from "firebase/database";
-
+import { Notifications } from 'expo';
 const Home = () => {
   const route = useRoute();
   const [userData, setUserData] = useState(null);
