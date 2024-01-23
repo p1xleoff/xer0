@@ -70,7 +70,7 @@ const Profile = () => {
       Alert.alert('Validation Error', 'Invalid Player ID');
       return false;
     }
-    const townHallRegex = /^(0?[1-9]|1[0-9]|16)$/;
+    const townHallRegex = /^(0?[1-9]|1[0-9]|15)$/;
 
     if (!townHallRegex.test(clashTH)) {
       Alert.alert(

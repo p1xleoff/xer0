@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -15,12 +15,16 @@ import { Picker } from '@react-native-picker/picker';
 import * as Notifications from 'expo-notifications';
 import { sendPushNotification } from '../config/pushNotifs';
 import { registerForPushNotificationsAsync } from '../config/expoNotifs';
+import BottomSheet from '@gorhom/bottom-sheet';
+import { Divider, Icon } from 'react-native-paper';
 
 function TroopRequestPage() {
   const [troopRequests, setTroopRequests] = useState([]);
   const [hasTroopRequest, setHasTroopRequest] = useState(false);
   const [selectedProfileId, setSelectedProfileId] = useState(null);
   const [profiles, setProfiles] = useState([]);
+  const bottomSheetRef = useRef(null);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   useEffect(() => {
     const notificationListener = Notifications.addNotificationReceivedListener(
@@ -106,47 +110,144 @@ function TroopRequestPage() {
     }
   };
 
+  const openBottomSheet = () => {
+    if (bottomSheetRef.current) {
+      bottomSheetRef.current.expand();
+      setIsBottomSheetOpen(true);
+    }
+  };
+
+  const closeBottomSheet = () => {
+    if (bottomSheetRef.current) {
+      bottomSheetRef.current.close();
+      setIsBottomSheetOpen(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <FlatList
-        data={troopRequests}
-        keyExtractor={(item) => `${item.userId}-${item.profileId}`}
-        renderItem={({ item }) => (
-          <View style={styles.requestItem}>
-            <Text>{`${item.clashName} needs reinforcements`}</Text>
-            <Text>{`Clash TH: ${item.clashTH}`}</Text>
-            <Button
-              title="Mark as Completed"
-              onPress={() => markAsCompleted(item.userId, item.profileId)}
-            />
-          </View>
-        )}
-      />
-      <Picker
-        selectedValue={selectedProfileId}
-        onValueChange={(itemValue) => setSelectedProfileId(itemValue)}
-        style={styles.picker}
+      <Text
+        style={[
+          styles.itemText,
+          {
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginLeft: 20,
+            marginVertical: 20,
+          },
+        ]}
       >
-        {Object.entries(profiles).map(([id, profile]) => (
-          <Picker.Item label={profile.clashName} value={id} key={id} />
-        ))}
-      </Picker>
-
+        Active Requests
+      </Text>
+      <View style={styles.listContainer}>
+        <FlatList
+          data={troopRequests}
+          keyExtractor={(item) => `${item.userId}-${item.profileId}`}
+          renderItem={({ item }) => (
+            <View style={styles.requestItem}>
+              <View>
+                <Text
+                  style={[
+                    styles.itemText,
+                    { fontSize: 22, fontWeight: 'bold' },
+                  ]}
+                >
+                  {item.clashName}
+                </Text>
+                <Text style={styles.itemText} >{`Town Hall ${item.clashTH}`}</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => markAsCompleted(item.userId, item.profileId)}
+              >
+                <Icon source="check-circle-outline" color="#0fdb46" size={30} />
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+      </View>
       <TouchableOpacity
-        style={[styles.button, hasTroopRequest && styles.disabledButton]}
-        onPress={sendTroopRequest}
-        disabled={hasTroopRequest}
+        onPress={openBottomSheet}
+        style={[styles.button, { width: '90%', marginHorizontal: 20 }]}
       >
-        <Text style={styles.text}>Send Troop Request</Text>
+        <Text style={styles.buttonText}>Add Account</Text>
       </TouchableOpacity>
+      {/* Dark overlay behind the bottom sheet */}
+      {isBottomSheetOpen && (
+        <TouchableOpacity
+          style={styles.overlay}
+          onPress={closeBottomSheet}
+          activeOpacity={1}
+        />
+      )}
+      {isBottomSheetOpen && (
+        <TouchableOpacity
+          style={styles.overlay}
+          onPress={closeBottomSheet}
+          activeOpacity={1}
+        />
+      )}
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={0}
+        snapPoints={['1%', '50%', '80%']}
+        enablePanDownToClose={true}
+        handleIndicatorStyle={{ backgroundColor: '#fff' }}
+        style={{ backgroundColor: 'rgba(0, 0, 0, 0)', paddingHorizontal: 20 }}
+        backgroundStyle={{ backgroundColor: '#1a1a1a', paddingHorizontal: 20 }}
+      >          
+        <Text style={{color: '#fff', fontSize: 18, fontWeight: 'bold', letterSpacing: 1, marginVertical: 10 }} >
+        Account Details
+        </Text>
+        <FlatList
+          data={Object.entries(profiles)}
+          keyExtractor={([id]) => id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={[
+                styles.profileCard,
+                selectedProfileId === item[0] && styles.activeProfileCard,
+              ]}
+              onPress={() => { setSelectedProfileId(item[0]); }} >
+              <Text  style={[
+                styles.profileText,
+                selectedProfileId === item[0] && styles.activeProfileText ]}>
+                {item[1].clashName}
+              </Text>
+              <Text style={[
+                styles.profileText && {fontSize: 16, color: '#fff'},
+                selectedProfileId === item[0] && styles.activeProfileText && {fontSize: 16, color: '#000'} ]}>{`TH${item[1].clashTH}`}</Text>
+              {/* Add any other profile information you want to display */}
+            </TouchableOpacity>
+          )}
+        />
+        <TouchableOpacity
+          style={[styles.button, hasTroopRequest && styles.disabledButton]}
+          onPress={() => {
+            sendTroopRequest();
+            closeBottomSheet(); // Close bottom sheet after pressing the button
+          }}
+          disabled={hasTroopRequest}
+        >
+          <Text style={styles.buttonText}>Send Request</Text>
+        </TouchableOpacity>
+      </BottomSheet>
     </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#101010',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  listContainer: {
+    marginHorizontal: 20,
+  },
+  itemText: {
+    color: '#fff',
   },
   profileContainer: {
     margin: 10,
@@ -156,9 +257,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   requestItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    flexDirection: 'row',
+    padding: 15,
+    paddingHorizontal: 20,
+    marginBottom: 5,
+    backgroundColor: '#2e2e2e',
+    borderRadius: 7,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -168,6 +272,44 @@ const styles = StyleSheet.create({
   picker: {
     width: '90%',
     backgroundColor: '#fff',
+  },
+  button: {
+    position: 'absolute',
+    bottom: 15,
+    padding: 12,
+    borderRadius: 5,
+    elevation: 10,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    width: '100%',
+    alignSelf: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    color: '#000',
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+  profileCard: {
+    padding: 15,
+    paddingHorizontal: 20,
+    marginVertical: 8,
+    backgroundColor: '#191919',
+    borderRadius: 7,
+    elevation: 5,
+    borderColor: '#666666',
+    borderWidth: 1,
+  },
+  activeProfileCard: {
+    backgroundColor: '#e8e8e8',
+  },
+  profileText:  {
+    fontSize: 22, 
+    fontWeight: 'bold',
+    color: '#fff'
+  },
+  activeProfileText:    {
+    color: '#000',
   },
 });
 
