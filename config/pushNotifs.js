@@ -9,7 +9,7 @@ const sendPushNotification = async (expoPushToken, title, body) => {
         data: { data: 'goes here' },
       },
       to: expoPushToken,
-      trigger: null, // Trigger immediately
+      trigger: null,
     });
   } catch (error) {
     console.error('Error sending push notification:', error);
