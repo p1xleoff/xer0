@@ -1,47 +1,72 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, StatusBar, Text, TouchableOpacity, FlatList } from 'react-native';
-import { auth, database, ref, push, onValue, off } from '../config/firebase';
-import { remove } from '@firebase/database';
+import { View, StyleSheet, StatusBar, Text, TouchableOpacity, FlatList, Alert, Modal } from 'react-native';
+import { auth, database, ref, push, onValue,} from '../config/firebase';
+import { update } from '@firebase/database';
 import { sendPushNotification } from '../config/pushNotifs';
 import { registerForPushNotificationsAsync } from '../config/expoNotifs';
 import * as Notifications from 'expo-notifications';
+import { Picker } from '@react-native-picker/picker';
 
 function TroopRequestPage() {
   const [troopRequests, setTroopRequests] = useState([]);
+  const [hasTroopRequest, setHasTroopRequest] = useState(false);
 
   const sendTroopRequest = async () => {
     try {
       const userId = auth.currentUser.uid;
-  
-      // Push troop request to the database with a timestamp
-      await push(ref(database, 'troopRequests'), {
-        userId,
-        message: 'I need reinforcements!',
-        timestamp: Date.now(),
-        completed: false,
-      });
-  
+
+      // Check if the user already has a troop request
+      if (hasTroopRequest) {
+        // Show an alert indicating that the user has a pending request
+        Alert.alert('Info', 'You already have a troop request. Please wait for it to be completed.');
+        return;
+      }
+
+      // Update the user's request status to true
+      await update(ref(database, `users/${userId}`), { request: true });
+
       const expoPushToken = await registerForPushNotificationsAsync();
-  
+
       if (expoPushToken) {
         // Send a push notification with the Expo Push Token
-        sendPushNotification(expoPushToken, 'Troop Request', 'I need reinforcements!');
+        sendPushNotification(expoPushToken, 'Hey Chief!', 'Someone needs some reinforcements');
       }
     } catch (error) {
       console.error('Error sending troop request:', error);
     }
   };
 
-  const markAsCompleted = async (troopRequestId) => {
+  const markAsCompleted = async (userId) => {
     try {
-      // Remove the troop request from the database
-      await remove(ref(database, `troopRequests/${troopRequestId}`));
+      // Update the user's request status to false
+      await update(ref(database, `users/${userId}`), { request: false });
 
-      // Update the local state to reflect the removal of the completed troop request
-      setTroopRequests((prevTroopRequests) => prevTroopRequests.filter((item) => item.id !== troopRequestId));
+      // Refresh the troop requests
+      refreshTroopRequests();
     } catch (error) {
       console.error('Error marking troop request as completed:', error);
     }
+  };
+
+  const refreshTroopRequests = async () => {
+    const troopRequestsRef = ref(database, 'users');
+    const handleTroopRequests = (snapshot) => {
+      const usersData = snapshot.val();
+
+      if (usersData) {
+        const troopRequestsArray = Object.entries(usersData)
+          .map(([key, value]) => ({ id: key, ...value }))
+          .filter((user) => user.request);
+
+        setTroopRequests(troopRequestsArray);
+
+        // Check if the current user has a troop request
+        const currentUser = troopRequestsArray.find((user) => user.id === auth.currentUser.uid);
+        setHasTroopRequest(!!currentUser);
+      }
+    };
+
+    onValue(troopRequestsRef, handleTroopRequests);
   };
 
   useEffect(() => {
@@ -51,34 +76,22 @@ function TroopRequestPage() {
       // Handle the notification if needed
     });
 
-    // Listen for changes in the 'troopRequests' node
-    const troopRequestsRef = ref(database, 'troopRequests');
-    const handleNewTroopRequest = (snapshot) => {
-      const troopRequestsData = snapshot.val();
-
-      if (troopRequestsData) {
-        // Extract the troop requests from the nested structure
-        const troopRequestsArray = Object.entries(troopRequestsData)
-          .map(([key, value]) => ({ id: key, ...value }))
-          .filter((troopRequest) => !troopRequest.completed && troopRequest.timestamp >= Date.now() - 86400000);
-
-        // Update troopRequests state to display in a list
-        setTroopRequests(troopRequestsArray);
-      }
-    };
-
-    onValue(troopRequestsRef, handleNewTroopRequest);
+    // Fetch initial troop requests
+    refreshTroopRequests();
 
     // Clean up the listeners when the component unmounts
     return () => {
-      off(troopRequestsRef, 'value', handleNewTroopRequest);
       Notifications.removeNotificationSubscription(notificationListener);
     };
   }, []);
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={sendTroopRequest}>
+      <TouchableOpacity
+        style={[styles.button, hasTroopRequest && styles.disabledButton]}
+        onPress={sendTroopRequest}
+        disabled={hasTroopRequest}
+      >
         <Text style={styles.text}>Send Notification</Text>
       </TouchableOpacity>
 
@@ -87,12 +100,11 @@ function TroopRequestPage() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.requestItem}>
-            <Text>{`${item.userId}: ${item.message}`}</Text>
-            {!item.completed && (
-              <TouchableOpacity onPress={() => markAsCompleted(item.id)}>
-                <Text style={styles.markCompleted}>Mark as Completed</Text>
-              </TouchableOpacity>
-            )}
+            <Text>{`${item.username}: needs reinforcements`}</Text>
+             <Text>{`TH: ${item.profiles[Object.keys(item.profiles)[0]].clashTH}`}</Text>
+            <TouchableOpacity onPress={() => markAsCompleted(item.id)}>
+              <Text style={styles.markCompleted}>Mark as Completed</Text>
+            </TouchableOpacity>
           </View>
         )}
       />
@@ -105,7 +117,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: 'white',
-    marginTop: StatusBar.currentHeight,
   },
   button: {
     width: '90%',
@@ -114,6 +125,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#000',
     paddingVertical: '3%',
+  },
+  disabledButton: {
+    backgroundColor: 'gray',
   },
   text: {
     fontSize: 25,

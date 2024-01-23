@@ -37,7 +37,7 @@ async function registerForPushNotificationsAsync() {
 
     // Remove the explicit projectId parameter
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
+    //console.log(token);
   } else {
     alert('Must use a physical device for Push Notifications');
   }
