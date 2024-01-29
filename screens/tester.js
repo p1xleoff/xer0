@@ -12,9 +12,6 @@ import {
 import { auth, database, ref, onValue } from '../config/firebase';
 import { update, getDatabase } from 'firebase/database';
 import { Picker } from '@react-native-picker/picker';
-import * as Notifications from 'expo-notifications';
-import { sendPushNotification } from '../config/pushNotifs';
-import { registerForPushNotificationsAsync } from '../config/expoNotifs';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Divider, Icon } from 'react-native-paper';
 
@@ -27,17 +24,7 @@ function TroopRequestPage() {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   useEffect(() => {
-    const notificationListener = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        console.log('Notification received:', notification);
-      }
-    );
-
     refreshTroopRequests();
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener);
-    };
   }, []);
 
   const refreshTroopRequests = async () => {
@@ -67,12 +54,12 @@ function TroopRequestPage() {
   const sendTroopRequest = async () => {
     try {
       const userId = auth.currentUser.uid;
-
-      if (hasTroopRequest) {
-        Alert.alert(
-          'Info',
-          'You already have a troop request. Please wait for it to be completed.'
-        );
+  
+      // Check if a request already exists for the selected profile
+      const existingRequest = troopRequests.find((request) => request.userId === userId && request.profileId === selectedProfileId);
+  
+      if (existingRequest) {
+        Alert.alert('Info', 'A troop request for this profile already exists. Please wait for it to be completed.');
         return;
       }
 
@@ -82,17 +69,6 @@ function TroopRequestPage() {
           request: true,
         }
       );
-
-      const expoPushToken = await registerForPushNotificationsAsync();
-
-      if (expoPushToken) {
-        sendPushNotification(
-          expoPushToken,
-          'Hey Chief!',
-          'Someone needs some reinforcements'
-        );
-      }
-
       refreshTroopRequests();
     } catch (error) {
       console.error('Error sending troop request:', error);
@@ -144,7 +120,7 @@ function TroopRequestPage() {
           data={troopRequests}
           keyExtractor={(item) => `${item.userId}-${item.profileId}`}
           renderItem={({ item }) => (
-            <View style={styles.requestItem}>
+            <View  style={[styles.requestItem, item.userId === auth.currentUser.uid && styles.currentUserRequestItem]}>
               <View>
                 <Text
                   style={[
@@ -265,6 +241,9 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  currentUserRequestItem: {
+    backgroundColor: 'green',
   },
   markCompleted: {
     color: 'blue',
