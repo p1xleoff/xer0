@@ -191,7 +191,6 @@ const Profile = () => {
       };
 
       try {
-        // Optimistic update
         setUserData((prevUserData) => ({
           ...prevUserData,
           profiles: {
@@ -202,15 +201,13 @@ const Profile = () => {
 
         await set(newProfileRef, newProfileData);
 
-        console.log('LOG: User Data State Updated:', userData); // Log updated user data state
-
-        // Clear the form fields after adding a profile
+        // console.log('User Data State Updated:', userData);
+        // clear form fields after adding a profile
         setClashId('');
         setClashName('');
         setClashTH('');
         setWarStatus(false);
-
-        console.log('LOG: Form Fields Cleared'); // Log that form fields are cleared
+        console.log('profile added');
       } catch (error) {
         console.error('Error adding profile:', error);
       }
@@ -276,7 +273,7 @@ const Profile = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Dark overlay behind the bottom sheet */}
+      {/* bottom sheet overlay backdrop */}
       {isBottomSheetOpen && (
         <TouchableOpacity
           style={styles.overlay}
