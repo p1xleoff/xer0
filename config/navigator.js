@@ -11,8 +11,10 @@ import Status from '../screens/status.js';
 import Tester from '../screens/tester.js';
 import Welcome from '../screens/welcome.js';
 import Account from '../screens/account.js';
-import Requests from '../screens/requests.js'
-;
+import Requests from '../screens/requests.js';
+import Events from '../screens/events.js';
+import Admin from '../screens/admin.js';
+
 const Stack = createStackNavigator();
 
 export const Navigator = () => {
@@ -22,7 +24,7 @@ export const Navigator = () => {
       <Stack.Navigator
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#101010',
+            backgroundColor: '#040404',
             elevation: 0,
           },
           headerTintColor: '#fff',
@@ -35,7 +37,9 @@ export const Navigator = () => {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="Account" component={Account} options={{ headerShown: false }} />
         <Stack.Screen name="Tester" component={Tester} />
+        <Stack.Screen name="Events" component={Events} />
         <Stack.Screen name="Requests" component={Requests} />
+        <Stack.Screen name="Admin" component={Admin} />
         <Stack.Screen name="Status" component={Status} options={{ title: 'Player War Status' }} />
       </Stack.Navigator>
     </PaperProvider>

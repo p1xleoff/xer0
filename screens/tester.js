@@ -1,11 +1,12 @@
 
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
- 
+
 const Tester = props => {
   return (
     <View style={styles.header}>
       <Text style={styles.headerTitle}>Huh</Text>
+
     </View>
   );
 };

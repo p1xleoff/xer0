@@ -114,9 +114,7 @@ function Account() {
         </View>
         <View style={styles.policy}>
           <Text style={styles.policyText}>
-            This content is not affiliated with, endorsed, sponsored, or
-            specifically approved by Supercell. Supercell is not responsible for
-            it. For more information, see Supercell's Fan Content Policy.
+          This material is unofficial and is not endorsed by Supercell. For more information see Supercell's Fan Content Policy:
           </Text>
           <Text
             onPress={() => Linking.openURL('https://www.google.com')}

@@ -128,7 +128,7 @@ const Profile = () => {
             {item.clashName}
           </Text>
           <Text style={styles.itemText}>TH{item.clashTH}</Text>
-          <Text style={styles.itemText}>#{item.clashId}</Text>
+          <Text style={styles.itemText}>{item.clashId}</Text>
         </View>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <Switch
@@ -220,33 +220,14 @@ const Profile = () => {
       <View style={{ marginHorizontal: 20, flex: 1 }}>
         {userData ? (
           <View>
-            <View style={styles.header}>
-              <Icon source="sword-cross" color="#fff" size={50} />
-              <View>
-                <Text
-                  style={{
-                    fontSize: 28,
-                    fontWeight: 'bold',
-                    color: '#fff',
-                    marginLeft: 15,
-                  }}
-                >
+            {/* <View style={styles.header}>
+              <Icon source="sword-cross" color="#fff" size={30} />
+                <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#fff'}} >
                   {userData.username}
                 </Text>
-                {/* <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: '500',
-                    color: '#fff',
-                    marginLeft: 15,
-                  }}
-                >
-                  {userData.email}
-                </Text> */}
-              </View>
-            </View>
+            </View> */}
             <Text style={{ fontSize: 16, fontWeight: '500', marginTop: 20, color: '#fff' }}>
-              Game Accounts:
+              Villages:
             </Text>
             <FlatList
               data={
@@ -269,7 +250,7 @@ const Profile = () => {
           </View>
         )}
         <TouchableOpacity onPress={openBottomSheet} style={styles.button}>
-          <Text style={styles.buttonText}>Add Account</Text>
+          <Text style={styles.buttonText}>Add Village</Text>
         </TouchableOpacity>
       </View>
 
@@ -311,7 +292,7 @@ const Profile = () => {
               letterSpacing: 1,
             }}
           >
-            Account Details
+            Village Details
           </Text>
           <TouchableOpacity onPress={closeBottomSheet}>
             <Icon source="close-circle-outline" color="#e63200" size={30} />
@@ -372,10 +353,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#101010',
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
     backgroundColor: '#1a1a1a',
-    paddingVertical: 15,
+    paddingVertical: 5,
     borderRadius: 5,
     paddingHorizontal: 15,
     elevation: 7
@@ -386,7 +365,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     paddingHorizontal: 15,
     paddingVertical: 10,
-    borderRadius: 9,
+    borderRadius: 5,
     elevation: 7
   },
   itemText: {

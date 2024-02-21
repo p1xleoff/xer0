@@ -54,3 +54,204 @@ const styles = StyleSheet.create({
 });
 
 export default Tester;
+
+
+////////////////////////////////////////
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  FlatList,
+  StyleSheet,
+} from 'react-native';
+import { getDatabase, ref, push, onValue, set } from 'firebase/database';
+import moment from 'moment';
+
+const EventScreen = () => {
+  const [events, setEvents] = useState([]);
+  const [newEvent, setNewEvent] = useState({
+    name: '',
+  });
+  const database = getDatabase();
+
+  useEffect(() => {
+    const eventsRef = ref(database, 'events');
+    onValue(eventsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const eventData = Object.values(snapshot.val());
+        console.log(eventData); // Log the events array to the console
+        setEvents(eventData);
+      } else {
+        setEvents([]);
+      }
+    });
+  }, []);
+  
+  const addEvent = () => {
+    const eventsRef = ref(database, 'events');
+    const newEventRef = push(eventsRef);
+    set(newEventRef, newEvent);
+    setNewEvent({
+      name: '',
+    });
+  };
+  const calculateRemainingTime = (item) => {
+    const currentTime = moment();
+    const eventStartTime = moment()
+      .startOf('day')
+      .set({
+        hour: parseInt(item.startTime.split(':')[0]),
+        minute: parseInt(item.startTime.split(':')[1]),
+      });
+
+    if (item.name === 'Clan War League') {
+      // Calculate the start time of the current month's Clan War Leagues phases
+      const eventStartTime = moment()
+        .startOf('month')
+        .set({ hour: 13, minute: 30 }); // Start time on the 1st day of the month
+      const signUpEndTime = moment(eventStartTime).add(2, 'days');
+      const leagueEndTime = moment(signUpEndTime).add(8, 'days');
+
+      if (currentTime.isBefore(eventStartTime)) {
+        // Before the event starts
+        const timeDiff = eventStartTime.diff(currentTime, 'milliseconds');
+        const remainingTime = moment.duration(timeDiff);
+        return `${remainingTime.days()}d ${remainingTime.hours()}h ${remainingTime.minutes()}m`;
+      } else if (currentTime.isBefore(signUpEndTime)) {
+        // During the sign-up period
+        const timeDiff = signUpEndTime.diff(currentTime, 'milliseconds');
+        const remainingTime = moment.duration(timeDiff);
+        return `Sign-up period ends in ${remainingTime.days()}d ${remainingTime.hours()}h ${remainingTime.minutes()}m`;
+      } else if (currentTime.isBefore(leagueEndTime)) {
+        // During the league duration
+        const timeDiff = leagueEndTime.diff(currentTime, 'milliseconds');
+        const remainingTime = moment.duration(timeDiff);
+        return `Active\n${remainingTime.days()}d ${remainingTime.hours()}h ${remainingTime.minutes()}m`;
+      } else {
+        // Event has ended
+        return 'Event Active';
+      }
+    }
+    if (item.name === 'League Reset') {
+      const currentMonth = currentTime.month();
+      const lastMondayOfCurrentMonth = moment()
+        .startOf('month')
+        .month(currentMonth)
+        .endOf('month')
+        .day('Monday')
+        .hour(10)
+        .minute(30);
+      const nextMonth = (currentMonth + 1) % 12;
+      const lastMondayOfNextMonth = moment()
+        .startOf('month')
+        .month(nextMonth)
+        .endOf('month')
+        .day('Monday')
+        .hour(10)
+        .minute(30);
+
+      // If today is after the last Monday of the current month, move to the last Monday of next month
+      if (currentTime.isAfter(lastMondayOfCurrentMonth)) {
+        const timeDiff = lastMondayOfNextMonth.diff(
+          currentTime,
+          'milliseconds'
+        );
+        const remainingTime = moment.duration(timeDiff);
+        return `${remainingTime.days()}d ${remainingTime.hours()}h ${remainingTime.minutes()}m`;
+      } else {
+        const timeDiff = lastMondayOfCurrentMonth.diff(
+          currentTime,
+          'milliseconds'
+        );
+        const remainingTime = moment.duration(timeDiff);
+        return `${remainingTime.days()}d ${remainingTime.hours()}h ${remainingTime.minutes()}m`;
+      }
+    }
+    if (item.repeat === 'weekly') {
+      eventStartTime.day(item.dayOfWeek);
+      if (eventStartTime.isBefore(currentTime)) {
+        eventStartTime.add(7, 'days');
+      }
+    } else if (item.repeat === 'monthly') {
+      const startDayOfMonth = parseInt(item.startDayOfMonth);
+      let startOfMonth = moment()
+        .startOf('month')
+        .set({
+          date: startDayOfMonth,
+          hour: parseInt(item.startTime.split(':')[0]),
+          minute: parseInt(item.startTime.split(':')[1]),
+        });
+
+      // If the current date has passed the event's start time for this month,
+      // move to the next month
+      if (currentTime.isAfter(startOfMonth)) {
+        startOfMonth.add(1, 'month');
+      }
+
+      eventStartTime.set({
+        year: startOfMonth.year(),
+        month: startOfMonth.month(),
+        date: startOfMonth.date(),
+      });
+    }
+
+    const duration = parseInt(item.duration);
+    const timeDiff = eventStartTime.diff(currentTime, 'milliseconds');
+    const remainingTime = moment.duration(timeDiff);
+
+    if (timeDiff <= 0) {
+      return 'Event Active';
+    } else {
+      const days = remainingTime.days();
+      const hours = remainingTime.hours();
+      const minutes = remainingTime.minutes();
+      if (days === 0) {
+        return `${hours}h ${minutes}m`;
+      } else {
+        return `${days}d ${hours}h ${minutes}m`;
+      }
+    }
+  };
+
+  const renderEvent = ({ item, index }) => {
+    const remainingTime = calculateRemainingTime(item);
+
+    return (
+      <View style={styles.card} key={index}>
+        <Text>{item.name}</Text>
+        <Text>{remainingTime}</Text>
+      </View>
+    );
+  };
+
+  return (
+    <View>
+      <TextInput
+        placeholder="Event Name"
+        value={newEvent.name}
+        onChangeText={(text) => setNewEvent({ ...newEvent, name: text })}
+      />
+      <Button title="Add Event" onPress={addEvent} />
+      <FlatList
+        data={events}
+        keyExtractor={(item) => item.eventId}
+        renderItem={renderEvent}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: '#fff',
+    elevation: 10,
+    borderColor: '#fff',
+    padding: 10,
+    borderRadius: 7,
+    marginVertical: 10,
+  },
+});
+
+export default EventScreen;

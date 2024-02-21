@@ -74,6 +74,14 @@ const Home = () => {
            <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Login")}>
               <Text style={[styles.text, {color: '#fff'}]}>Login</Text>
               <Icon source="chevron-right" color='#fff' size={28} />
+          </TouchableOpacity>            
+          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Events")}>
+              <Text style={[styles.text, {color: '#fff'}]}>Events</Text>
+              <Icon source="chevron-right" color='#fff' size={28} />
+          </TouchableOpacity>            
+          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Admin")}>
+              <Text style={[styles.text, {color: '#fff'}]}>admin</Text>
+              <Icon source="chevron-right" color='#fff' size={28} />
           </TouchableOpacity>          
         </View>
       </View>

@@ -66,7 +66,7 @@ const WarStatus = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#101010'
+    backgroundColor: '#101010',
   },
   profileItem: {
     paddingVertical: 10,
@@ -75,14 +75,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     borderRadius: 7,
     marginVertical: 5,
-    elevation: 10
+    elevation: 10,
   },
   header: {
     marginHorizontal: 10,
     fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
-    marginVertical: 5
+    marginVertical: 5,
   },
 });
 
