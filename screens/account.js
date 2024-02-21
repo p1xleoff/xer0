@@ -28,7 +28,7 @@ function Account() {
         navigation.replace('Login');
       })
       .catch((error) => {
-        console.log(error);
+        //console.log(error);
       });
   };
 
@@ -51,11 +51,11 @@ function Account() {
             // Set user data to state
             setUserData(userData);
           } else {
-            console.error('User data not found in the database.');
+            //console.error('User data not found in the database.');
           }
         })
         .catch((error) => {
-          console.error('Error fetching user data:', error);
+          //console.error('Error fetching user data:', error);
         });
     }
   }, []);
@@ -114,9 +114,7 @@ function Account() {
         </View>
         <View style={styles.policy}>
           <Text style={styles.policyText}>
-            This content is not affiliated with, endorsed, sponsored, or
-            specifically approved by Supercell. Supercell is not responsible for
-            it. For more information, see Supercell's Fan Content Policy.
+          This material is unofficial and is not endorsed by Supercell. For more information see Supercell's Fan Content Policy:
           </Text>
           <Text
             onPress={() => Linking.openURL('https://www.google.com')}
@@ -136,7 +134,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#101010',
   },
   innerContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: '5%',
     marginVertical: 5,
     top: StatusBar.currentHeight * 2,
   },

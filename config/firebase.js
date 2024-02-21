@@ -35,11 +35,11 @@ export const checkAuthState = (onUserAuthenticated, onUserLoggedOut) => {
 
       if (userSnapshot.exists()) {
         const userData = userSnapshot.val();
-        console.log("User Data:", userData);
+        //console.log("User Data:", userData);
 
         // Now you can use the user data to display information on the home screen
       } else {
-        console.error("User data not found in the database.");
+        //console.error("User data not found in the database.");
       }
     } else {
       // User is logged out

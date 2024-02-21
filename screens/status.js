@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { Icon } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 
 const WarStatus = () => {
   const [warStatusData, setWarStatusData] = useState([]);
 
-  useEffect(() => {
-    const database = getDatabase();
-    const profilesRef = ref(database, 'users');
-
-    const unsubscribe = onValue(profilesRef, (snapshot) => {
-      const userData = snapshot.val();
-      if (userData) {
-        const profiles = Object.values(userData).map((user) => {
-          return user.profiles ? Object.values(user.profiles) : [];
-        });
-        const flattenedProfiles = profiles.flat();
-        setWarStatusData(flattenedProfiles);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const database = getDatabase();
+      const profilesRef = ref(database, 'users');
+  
+      const unsubscribe = onValue(profilesRef, (snapshot) => {
+        const userData = snapshot.val();
+        if (userData) {
+          const profiles = Object.values(userData).map((user) => {
+            return user.profiles ? Object.values(user.profiles) : [];
+          });
+          const flattenedProfiles = profiles.flat();
+          setWarStatusData(flattenedProfiles);
+        }
+      });
+    }, [])
+  );
 
   const renderItem = ({ item }) => {
     // Determine the color based on the war status
@@ -30,6 +31,7 @@ const WarStatus = () => {
     const backgroundColor = item.warStatus ? 'lightgreen' : 'lightcoral';
     return (
       <View style={[styles.profileItem, { backgroundColor }]}>
+        
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View>
             <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#000' }}>
@@ -51,6 +53,7 @@ const WarStatus = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.innerContainer}>
       <View style={styles.header}>
         <Text style={styles.header}>Total Players: {warStatusData.length}</Text>
       </View>
@@ -59,6 +62,7 @@ const WarStatus = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.clashId}
       />
+      </View>
     </View>
   );
 };
@@ -66,7 +70,11 @@ const WarStatus = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#101010'
+    backgroundColor: '#101010',
+  },
+  innerContainer: {
+    top: StatusBar.currentHeight * 2,
+    marginBottom: 100,
   },
   profileItem: {
     paddingVertical: 10,
@@ -75,14 +83,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     borderRadius: 7,
     marginVertical: 5,
-    elevation: 10
+    elevation: 10,
   },
   header: {
     marginHorizontal: 10,
     fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
-    marginVertical: 5
+    marginVertical: 5,
   },
 });
 

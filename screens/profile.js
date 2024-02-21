@@ -14,6 +14,7 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { auth } from '../config/firebase';
 import { getDatabase, ref, onValue, push, set } from 'firebase/database';
 import { Divider, Icon, Switch, TextInput } from 'react-native-paper';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -22,6 +23,7 @@ const Profile = () => {
   const [clashTH, setClashTH] = useState('');
   const [warStatus, setWarStatus] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const database = getDatabase();
@@ -110,7 +112,7 @@ const Profile = () => {
                 // Remove the profile
                 await set(profileRef, null);
               } catch (error) {
-                console.error('Error deleting profile:', error);
+                //console.error('Error deleting profile:', error);
               }
             }
           },
@@ -128,7 +130,7 @@ const Profile = () => {
             {item.clashName}
           </Text>
           <Text style={styles.itemText}>TH{item.clashTH}</Text>
-          <Text style={styles.itemText}>#{item.clashId}</Text>
+          <Text style={styles.itemText}>{item.clashId}</Text>
         </View>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <Switch
@@ -164,7 +166,7 @@ const Profile = () => {
       try {
         await set(profileRef, newStatus);
       } catch (error) {
-        console.error('Error updating war status:', error);
+        //console.error('Error updating war status:', error);
       }
     }
   };
@@ -207,9 +209,9 @@ const Profile = () => {
         setClashName('');
         setClashTH('');
         setWarStatus(false);
-        console.log('profile added');
+        //console.log('profile added');
       } catch (error) {
-        console.error('Error adding profile:', error);
+        //console.error('Error adding profile:', error);
       }
       closeBottomSheet(Keyboard.dismiss);
     }
@@ -217,36 +219,25 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
+        <View style={styles.innerContainer}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Home")}>
+          <Icon source="chevron-left" color="#fff" size={28} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Account")}>
+          <Icon source="account-outline" color="#fff" size={28} />
+        </TouchableOpacity>
+        </View>
       <View style={{ marginHorizontal: 20, flex: 1 }}>
         {userData ? (
           <View>
-            <View style={styles.header}>
-              <Icon source="sword-cross" color="#fff" size={50} />
-              <View>
-                <Text
-                  style={{
-                    fontSize: 28,
-                    fontWeight: 'bold',
-                    color: '#fff',
-                    marginLeft: 15,
-                  }}
-                >
+            {/* <View style={styles.header}>
+              <Icon source="sword-cross" color="#fff" size={30} />
+                <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#fff'}} >
                   {userData.username}
                 </Text>
-                {/* <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: '500',
-                    color: '#fff',
-                    marginLeft: 15,
-                  }}
-                >
-                  {userData.email}
-                </Text> */}
-              </View>
-            </View>
+            </View> */}
             <Text style={{ fontSize: 16, fontWeight: '500', marginTop: 20, color: '#fff' }}>
-              Game Accounts:
+              Villages:
             </Text>
             <FlatList
               data={
@@ -259,7 +250,7 @@ const Profile = () => {
               }
               renderItem={renderItem}
               keyExtractor={(item) => item.key}
-              style={{ marginBottom: 220 }}
+              style={{ marginBottom: 150 }}
               showsVerticalScrollIndicator={false}
             />
           </View>
@@ -269,7 +260,7 @@ const Profile = () => {
           </View>
         )}
         <TouchableOpacity onPress={openBottomSheet} style={styles.button}>
-          <Text style={styles.buttonText}>Add Account</Text>
+          <Text style={styles.buttonText}>Add Village</Text>
         </TouchableOpacity>
       </View>
 
@@ -311,7 +302,7 @@ const Profile = () => {
               letterSpacing: 1,
             }}
           >
-            Account Details
+            Village Details
           </Text>
           <TouchableOpacity onPress={closeBottomSheet}>
             <Icon source="close-circle-outline" color="#e63200" size={30} />
@@ -371,11 +362,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#101010',
   },
+  innerContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginHorizontal: '5%', 
+    top: StatusBar.currentHeight * 2,
+    marginBottom: 40
+  },
   header: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
     backgroundColor: '#1a1a1a',
-    paddingVertical: 15,
+    paddingVertical: 5,
     borderRadius: 5,
     paddingHorizontal: 15,
     elevation: 7
@@ -386,7 +382,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     paddingHorizontal: 15,
     paddingVertical: 10,
-    borderRadius: 9,
+    borderRadius: 5,
     elevation: 7
   },
   itemText: {
@@ -442,6 +438,15 @@ const styles = StyleSheet.create({
   loadingOverlay: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  backButton: {
+    marginBottom: 15,
+    backgroundColor: '#212121',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
 });
 

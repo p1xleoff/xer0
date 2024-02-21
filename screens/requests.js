@@ -86,7 +86,7 @@ function Requests() {
       );
       refreshTroopRequests();
     } catch (error) {
-      console.error('Error sending troop request:', error);
+      //console.error('Error sending troop request:', error);
     }
   };
 
@@ -97,7 +97,7 @@ function Requests() {
       });
       refreshTroopRequests();
     } catch (error) {
-      console.error('Error marking troop request as completed:', error);
+      //console.error('Error marking troop request as completed:', error);
     }
   };
 
@@ -266,6 +266,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#101010',
+    paddingTop: StatusBar.currentHeight
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,

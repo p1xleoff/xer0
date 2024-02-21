@@ -55,11 +55,11 @@ function Register() {
       await set(userRef, { email, username });
 
       navigation.replace('Home');
-      console.log('Registered with:', user.email);
+      //console.log('Registered with:', user.email);
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log(errorMessage);
+      //console.log(errorMessage);
       Alert.alert('Email already in use');
     }
   };
@@ -76,8 +76,9 @@ function Register() {
       <TextInput
         style={styles.input}
         mode="outlined"
-        activeOutlineColor='#000'
+        activeOutlineColor='#fff'
         label="Email"
+        textColor='#fff'
         keyboardType='email-address'
         onChangeText={text => setEmail(text)}
       />
@@ -86,7 +87,8 @@ function Register() {
         mode="outlined"
         label="Password"       
         value={password}
-        activeOutlineColor='#000'
+        activeOutlineColor='#fff'
+        textColor='#fff'
         onChangeText={text => setPassword(text)}
         secureTextEntry={!passwordVisible}
         right={
@@ -98,7 +100,8 @@ function Register() {
       <TextInput
         style={styles.input}
         mode="outlined"
-        activeOutlineColor='#000'
+        activeOutlineColor='#fff'
+        textColor='#fff'
         label="Username"
         onChangeText={(text) => setUsername(text)}
       />
@@ -128,27 +131,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#101010',
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     borderRadius: 9,
     marginBottom: 10,
-    color: '#000',
+    color: '#fff',
   },
   button: {
     width: '100%',
     borderRadius: 9,
     marginVertical: '10%',
     alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     paddingVertical: '3%',
     elevation: 5,
 },  
   buttonText: {
     fontSize: 25,
     fontWeight: 'bold',
-    color: 'white',
+    color: '#000',
     letterSpacing: 1,
 },
   title: {
@@ -157,13 +160,13 @@ const styles = StyleSheet.create({
     fontSize: 66,
     fontWeight: 'bold',
     letterSpacing: 1,
-    color: '#000',
+    color: '#fff',
 },
   textWrap: {
   alignItems: 'center',
 },
   text: {
-  color: '#000',
+  color: '#fff',
   fontSize: 20,
 },
 });

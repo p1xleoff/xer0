@@ -16,7 +16,7 @@ function Login() {
     navigation.navigate('Register');
   };  
   const toHome = (userInfo) => {
-    navigation.navigate('Home', { userInfo });
+    navigation.navigate('Landing', { userInfo });
   };
 
   const auth = getAuth();
@@ -24,7 +24,7 @@ function Login() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        navigation.replace("Home");
+        navigation.replace("Landing");
       }
     });
   }, []);
@@ -34,7 +34,7 @@ function Login() {
       .then((userCredential) => {
         const user = userCredential.user;
         // Save the user's login info to local storage
-        console.log('Logged in with: ', user.email);
+        //console.log('Logged in with: ', user.email);
         // Navigate to Home screen and pass user information
         toHome({ email: user.email });
       })
@@ -44,7 +44,6 @@ function Login() {
         Alert.alert('Incorrect Email or Password');
       });
   };
-  
 
   return (
     <View style={styles.container}>
@@ -52,7 +51,8 @@ function Login() {
       <TextInput
         style={styles.input}
         mode="outlined"
-        activeOutlineColor='#000'
+        activeOutlineColor='#fff'
+        textColor='#fff'
         label="Email"
         keyboardType='email-address'
         value={email}
@@ -62,7 +62,8 @@ function Login() {
         style={styles.input}
         mode="outlined"
         label="Password"
-        activeOutlineColor='#000'
+        activeOutlineColor='#fff'
+        textColor='#fff'
         value={password}
         onChangeText={text => setPassword(text)}
         secureTextEntry={!passwordVisible}
@@ -94,12 +95,12 @@ function Login() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#101010',
     flex: 1,
     padding: 20,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     marginBottom: 10,
     fontWeight: 'bold',
     fontSize: 18
@@ -109,14 +110,14 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     marginVertical: '10%',
     alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     paddingVertical: '3%',
     elevation: 10,
   },  
   buttonText: {
     fontSize: 25,
     fontWeight: 'bold',
-    color: 'white',
+    color: '#000',
     letterSpacing: 1,
   },
   title: {
@@ -125,13 +126,13 @@ const styles = StyleSheet.create({
     fontSize: 66,
     fontWeight: 'bold',
     letterSpacing: 1,
-    color: '#000',
+    color: '#fff',
   },
   textWrap: {
     alignItems: 'center',
   },
   text: {
-    color:  '#000',
+    color:  '#fff',
     fontSize: 20,
   },
 });
