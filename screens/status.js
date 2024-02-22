@@ -71,13 +71,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#101010',
-<<<<<<< HEAD
   },
   innerContainer: {
     top: StatusBar.currentHeight * 2,
     marginBottom: 100,
-=======
->>>>>>> d99b9560b8b5fc1bf3f888d4f5256e5ed68327b7
   },
   profileItem: {
     paddingVertical: 10,

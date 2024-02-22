@@ -125,47 +125,8 @@ const Home = () => {
             </View>
           </View>
         </View>
-<<<<<<< HEAD
         <Events />
       </ScrollView>
-=======
-        <Divider style={{margin: 10}}/>
-        <View>
-          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Profile")}>
-              <Text style={[styles.text, {color: '#fff'}]}>Profile</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>          
-          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Status")}>
-              <Text style={[styles.text, {color: '#fff'}]}>War</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Account")}>
-              <Text style={[styles.text, {color: '#fff'}]}>account</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>          
-          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Requests")}>
-              <Text style={[styles.text, {color: '#fff'}]}>Requests</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>           
-          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Tester")}>
-              <Text style={[styles.text, {color: '#fff'}]}>Tester</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>          
-           <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Login")}>
-              <Text style={[styles.text, {color: '#fff'}]}>Login</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>            
-          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Events")}>
-              <Text style={[styles.text, {color: '#fff'}]}>Events</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>            
-          <TouchableOpacity style={styles.links} onPress={() => navigation.navigate("Admin")}>
-              <Text style={[styles.text, {color: '#fff'}]}>admin</Text>
-              <Icon source="chevron-right" color='#fff' size={28} />
-          </TouchableOpacity>          
-        </View>
-      </View>
->>>>>>> d99b9560b8b5fc1bf3f888d4f5256e5ed68327b7
     </View>
   );
 };

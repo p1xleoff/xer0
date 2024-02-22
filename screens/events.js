@@ -174,24 +174,11 @@ const Events = () => {
         }
       }
     }
-<<<<<<< HEAD
     if (item.name === 'Clan Games') {
       const startOfMonth = moment().startOf('month').date(22).hour(13).minute(30);
       const endOfMonth = moment().startOf('month').date(28).hour(13).minute(29).second(59);
       const currentTime = moment();
     
-=======
-
-    if (item.name === 'Clan Games') {
-      const startOfMonth = moment()
-        .startOf('month')
-        .date(22)
-        .hour(13)
-        .minute(30);
-      const endOfMonth = moment().endOf('month').hour(13).minute(29).second(59);
-      const currentTime = moment();
-
->>>>>>> d99b9560b8b5fc1bf3f888d4f5256e5ed68327b7
       if (currentTime.isBetween(startOfMonth, endOfMonth)) {
         // Clan Games is active
         const timeDiff = endOfMonth.diff(currentTime, 'milliseconds');
@@ -208,16 +195,7 @@ const Events = () => {
         // Clan Games is not active
         const timeDiff = currentTime.isBefore(startOfMonth)
           ? startOfMonth.diff(currentTime, 'milliseconds')
-<<<<<<< HEAD
           : moment().startOf('month').date(28).hour(13).minute(30).diff(currentTime, 'milliseconds');
-=======
-          : moment()
-              .endOf('month')
-              .add(1, 'day')
-              .hour(13)
-              .minute(30)
-              .diff(currentTime, 'milliseconds');
->>>>>>> d99b9560b8b5fc1bf3f888d4f5256e5ed68327b7
         const remainingTime = moment.duration(timeDiff);
         const days = remainingTime.days();
         const hours = remainingTime.hours();
@@ -229,10 +207,7 @@ const Events = () => {
         }
       }
     }
-<<<<<<< HEAD
     
-=======
->>>>>>> d99b9560b8b5fc1bf3f888d4f5256e5ed68327b7
 
     if (item.repeat === 'weekly') {
       eventStartTime.day(item.dayOfWeek);
@@ -324,20 +299,12 @@ const Events = () => {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-<<<<<<< HEAD
     backgroundColor: '#101010',
   },
   container: {
     marginTop: 10,
     marginHorizontal: "5%",
     marginBottom: 25
-=======
-    backgroundColor: '#040404',
-  },
-  container: {
-    marginTop: 10,
-    marginHorizontal: 10,
->>>>>>> d99b9560b8b5fc1bf3f888d4f5256e5ed68327b7
   },
   recurringEvents: {
     flexDirection: 'row',
@@ -357,11 +324,8 @@ const styles = StyleSheet.create({
     elevation: 7,
     padding: 10,
     borderRadius: 5,
-<<<<<<< HEAD
     height: 80,
     justifyContent: 'center'
-=======
->>>>>>> d99b9560b8b5fc1bf3f888d4f5256e5ed68327b7
   },
   row: {
     flexDirection: 'row',
