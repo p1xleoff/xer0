@@ -302,7 +302,11 @@ const EventScreen = () => {
   return (
     <View style={styles.body}>
       <View style={styles.container}>
+<<<<<<< HEAD
         <Text style={[styles.text, {fontSize: 16, fontWeight: 'bold'}]}>Recurring In-Game Events</Text>
+=======
+        <Text style={[styles.text, {fontSize: 16, fontWeight: 'bold'}]}>Recurring Events</Text>
+>>>>>>> d99b9560b8b5fc1bf3f888d4f5256e5ed68327b7
         <View style={styles.recurringEvents}>
         {events.map((item, index) => (
           <View style={styles.column} key={index}>

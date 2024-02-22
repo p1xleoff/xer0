@@ -14,7 +14,10 @@ import Account from '../screens/account.js';
 import Requests from '../screens/requests.js';
 import Events from '../screens/events.js';
 import Admin from '../screens/admin.js';
+<<<<<<< HEAD
 import Landing from '../screens/landing.js';
+=======
+>>>>>>> d99b9560b8b5fc1bf3f888d4f5256e5ed68327b7
 
 const Stack = createStackNavigator();
 
@@ -37,8 +40,11 @@ export const Navigator = () => {
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
         <Stack.Screen name="Tester" component={Tester} />
+<<<<<<< HEAD
         <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
         <Stack.Screen name="Account" component={Account} options={{ headerShown: false }} />
+=======
+>>>>>>> d99b9560b8b5fc1bf3f888d4f5256e5ed68327b7
         <Stack.Screen name="Events" component={Events} />
         <Stack.Screen name="Requests" component={Requests} />
         <Stack.Screen name="Admin" component={Admin} />

@@ -43,6 +43,7 @@ const Home = () => {
     }
   }, []);
 
+<<<<<<< HEAD
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
@@ -85,6 +86,16 @@ const Home = () => {
           </TouchableOpacity>          
         </View>
       </View>
+=======
+import React from "react";
+import { StyleSheet, View, Text } from "react-native";
+
+const Tester = props => {
+  return (
+    <View style={styles.header}>
+      <Text style={styles.headerTitle}>Huh</Text>
+
+>>>>>>> d99b9560b8b5fc1bf3f888d4f5256e5ed68327b7
     </View>
   );
 };
